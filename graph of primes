@@ -1,0 +1,54 @@
+//programme to plot a graph of prime numbers from 2 to 50
+#include <iostream>
+using namespace std;
+
+bool isAFactor(int i, int n);
+bool prime(int i);
+void print(int n);
+
+int main()
+{
+	cout << "----+----|----+----|----+----|----+----|----+----|\n";
+	bool test;
+	for (int i = 2; i <= 50; i++)
+	{
+		test = prime(i);
+		if (test == true)
+		{
+			print(i);
+		}
+	}
+
+
+	int x;
+	cin >> x;
+	return 0;
+}
+
+bool isAFactor(int i, int n)
+{
+	return (n%i == 0);
+}
+
+bool prime(int i)
+{
+	bool test;
+	for (int j = 2; j < i; j++)
+	{
+		test = isAFactor(j, i);
+		if (test == true)
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+void print(int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		cout << "*";
+	}
+	cout << endl;
+}
