@@ -1,0 +1,24 @@
+//programme to convert centimetres to yards, feet and inches
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	double centimetres;
+	int yards, feet, inches;
+	cout << "Enter centimeters: ";
+	cin >> centimetres;
+	inches = centimetres / 2.54;
+	yards = inches / 36;
+	inches = inches % 36;
+	feet = inches / 12;
+	inches = inches % 12;
+
+	cout << "The equivalent is: " << yards << " yards " << feet << " feet and " << inches << "inches \n";
+
+	int x;
+	cin >> x;  //this is just to keep the window open 
+
+	return 0;
+}
