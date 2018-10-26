@@ -1,0 +1,39 @@
+//programme to determine a monthly repayment plan
+//how many months it will take to pay for a stereo that cost €1500. There was no down payment, interest rate of 12% per year and monthly payments of €50
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	double interest, payment, remainder, cost, totalInterest;
+	int numMonths = 0;
+	payment = 50;
+	remainder = 1500;
+	totalInterest = 0;
+
+
+	while(remainder > 0)
+	{
+		interest = remainder * 0.01;
+		totalInterest = totalInterest + interest;
+		remainder = remainder + interest;
+		remainder = remainder - payment;
+		numMonths++;
+
+		if (remainder < 0)
+		{
+			remainder = 0;
+		}
+
+		cout << "The month number is " << numMonths << "\nthe remaining balance is: €" << remainder << " The total interest paid so far is: €" << totalInterest << endl << endl;
+	}
+	
+
+
+
+
+	int x;
+	cin >> x;
+
+	return 0;
+}
