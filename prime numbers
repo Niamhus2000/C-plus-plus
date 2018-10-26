@@ -1,0 +1,43 @@
+//programme to print out the prime numbers between 2 and 1000
+#include <iostream>
+using namespace std;
+
+bool isAFactor(int i, int n);
+bool prime(int i);
+
+int main()
+{
+	bool test;
+	for (int i = 2; i <=1000; i++)
+	{
+		test = prime(i);
+		if (test == true)
+		{
+			cout << i << "  ";
+		}
+	}
+
+	int x;
+	cin >> x;
+
+	return 0;
+}
+
+bool isAFactor(int i, int n)
+{
+	return (n%i == 0);
+}
+
+bool prime(int i)
+{
+	bool test;
+	for (int j = 2; j < i; j++)
+	{
+		test = isAFactor(j, i);
+		if (test == true)
+		{
+			return false;
+		}
+	}
+	return true;
+}
