@@ -1,0 +1,78 @@
+//programme to classify triangles
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+double distance(double x1, double x2, double y1, double y2);
+int triangleType(double x1, double x2, double x3, double y1, double y2, double y3);
+bool veryClose(double x, double y);
+
+int main()
+{
+	double x1, x2, x3, y1, y2, y3;
+	int test;
+	cout << "Enter the co-ordinates of the triangle: ";
+	cin >> x1 >> y1 >> x2 >> y2 >> x3 >> y3;
+
+	test = triangleType(x1, x2, x3, y1, y2, y3);
+	if (test == 3)
+	{
+		cout << "This is an equilateral trianlge\n";
+	}
+
+	else if (test == 2)
+	{
+		cout << "This is an isoceles triangle\n";
+	}
+
+	else if (test == 1)
+	{
+		cout << "This is a scalene triangle\n";
+	}
+
+
+	int x;
+	cin >> x;
+
+	return 0;
+}
+
+double distance(double x1, double x2, double y1, double y2)
+{
+	return sqrt(pow((x2 - x1), 2) + pow((y2 - y1), 2));
+}
+
+int triangleType(double x1, double x2, double x3, double y1, double y2, double y3)
+{
+	bool test1, test2, test3;
+	double side1, side2, side3;
+	side1 = distance(x1, x2, y1, y2);
+	side2 = distance(x1, x3, y1, y3);
+	side3 = distance(x2, x3, y2, y3);
+
+	test1 = veryClose(side1, side2);  //true if 1 and 2 are very nearly equal 
+	test2 = veryClose(side1, side3);
+	test3 = veryClose(side2, side3);
+
+	if (test1 && test2 && test3)
+	{
+		return 3;
+	}
+
+	else if ((side1 == side2) || (side1 == side3) || (side3 == side2))
+	{
+		return 2;
+	}
+
+	else 
+	{
+		return 1;
+	}
+}
+
+bool veryClose(double x, double y)
+{
+	//return true iff the size of the difference between the numbers is less than 0.0001
+	//fabs gives the absolute value of a floating point number
+	return (fabs(x - y) < 0.0001);
+}
