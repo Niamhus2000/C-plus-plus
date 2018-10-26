@@ -1,0 +1,23 @@
+//programme to calculate the price per square inch of pizza
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+int main()
+{
+	double diameter, price, radius, area, ppsi;
+	cout << "Enter the diameter of the pizza in inches: ";
+	cin >> diameter;
+	cout << "Enter the price of the pizza in euro: ";
+	cin >> price;
+	radius = diameter / 2;
+	area = radius*radius*3.14;
+	ppsi = price / area;
+	cout << "The area of the pizza is: " << area << " inches\n";
+	cout << "The price per square inch is: " << setprecision(2) << fixed << ppsi << " cents\n";
+
+	int x;
+	cin >> x;
+
+	return 0;
+}
