@@ -1,0 +1,33 @@
+//programme to calculate the investment return for a range of rates and years
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+int main()
+{
+	//value after y years of an investment x at interest rate r% is (x*(1+r/100)^y)
+	int years;
+	double rate, investment, investmentReturn, thingToBePowered, powered;
+
+	cout << "Enter the initial investment: ";
+		cin >> investment;
+
+		cout << "Rate   5years   10years   15years   20years   25years   30years\n";
+		for (double j = 5; j < 10.5; j = j + 0.5)
+		{
+			cout << j << "%   ";
+			for (int i = 5; i < 35; i = i + 5)			
+			{
+				thingToBePowered = 1 + (j / 100);
+				powered = pow(thingToBePowered, i);
+				investmentReturn = investment * powered;
+				cout << investmentReturn << "    ";				
+			}
+			cout << endl;
+		}
+
+	int x;
+	cin >> x;
+
+	return 0;
+}
