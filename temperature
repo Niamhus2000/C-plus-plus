@@ -1,0 +1,17 @@
+//programme to convert temperature in fahrenheit to centigrade
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	int fahrenheit, centigrade;
+	cout << "Enter the temperature in fahrenheit: ";
+	cin >> fahrenheit;
+	centigrade = (fahrenheit - 32)*(5 / 9);
+	cout << "The equivilant in centigrade is: " << centigrade << endl;
+
+	int x;
+	cin >> x;
+
+	return 0;
+}
