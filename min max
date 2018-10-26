@@ -1,0 +1,47 @@
+//programme to take weather data as input and calculate some statistics
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main()
+{
+	string name;
+	double min, max, average, temp, total;
+	int counter;
+	total = counter =  0;
+	cout << "Enter the name of the weather station: ";
+	//cin.ignore(INT_MAX, '\n');
+	getline(cin, name);
+
+	cout << "Enter the recorded temperatures, enter -999 to end\n";
+	cin >> temp;
+	min = max = temp;
+	while (temp != -999)
+	{
+		if (temp < min)
+		{
+			min = temp;
+		}
+
+		if (temp > max)
+		{
+			max = temp;
+		}
+
+		total = total + temp;
+		counter++;
+		cin >> temp;
+	}
+
+	average = total / counter;
+	cout << name << endl;
+	cout << "The highest temperature was: " << max << endl;
+	cout << "The lowest temperature was: " << min << endl;
+	cout << "The average temperature was: " << average;
+
+
+	int x;
+	cin >> x;
+
+	return 0;
+}
