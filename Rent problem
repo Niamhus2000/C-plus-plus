@@ -1,0 +1,32 @@
+//programme to compute the 'apartment problem'
+//A property manager handles x apartments, when the rent is €r per month all appartments are full. But with each €i increase one appartment becomes vacant
+//Each occupied appartment requires €m each month in maintenance
+//How many appartments should be rented to maximise profits?
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	int units;
+	double rent, increase, maintenance, newProfit, oldProfit;
+	cout << "Enter the number of units, the rent that results in all units being rented, the increase in rent that results in one extra vacant unit and the average maintenance per rented unit\n";
+	cin >> units >> rent >> increase >> maintenance;
+	oldProfit = 0;
+	newProfit = (units*rent) - (units*maintenance);
+	cout << "Rent\t Units\t Profit\n";
+	while (newProfit > oldProfit)
+	{
+		cout << rent << "\t" << units << "\t" << newProfit << endl;
+		oldProfit = newProfit;
+		rent = rent + increase;
+		units--;
+		newProfit = (units*rent) - (units*maintenance);
+	}
+
+	cout << "To get a maximum profit of €" << oldProfit << ", " << units+1 << " units should be rented at €" << rent-increase << " per month\n";
+
+	int x;
+	cin >> x;
+
+	return 0;
+}
