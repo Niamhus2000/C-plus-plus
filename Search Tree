@@ -1,0 +1,353 @@
+//program to implement a binary search tree
+
+#include <iostream>
+using namespace std;
+
+typedef struct Tree_Node Tree_Node;
+struct Tree_Node
+{
+	Tree_Node *left;
+	Tree_Node *right;
+	char data;
+};
+
+//define functions
+void insert_tree_node(Tree_Node *root, char data);
+Tree_Node* tree_search(Tree_Node *root, char data);
+void print_tree_ascending(Tree_Node *root); //print_in_order
+void print_tree_descending(Tree_Node *root);
+void print_pre_order(Tree_Node *root);
+void print_post_order(Tree_Node *root);
+
+void tree_delete(Tree_Node* root);
+void selectionSort(char treeArray[], int size);
+void balance(char treeArray[], int first, int last);
+void balanceRecurse(Tree_Node *root, char treeArray[], int first, int last);
+
+int main()
+{
+	int choice;
+	char parent, item, searchData;
+	Tree_Node *root = new Tree_Node; //make memory for the root
+	root->left = root->right = NULL; //initilise the left and right 
+
+	cout << "Enter your choice: \n 1:Binary Search Tree \n 2:Balanced Binary Search Tree\n";
+	cin >> choice;
+	while (choice > 2)
+	{
+		cout << "Invalid entry, please select again\n";
+		cin >> choice;
+	}
+
+		if (choice == 1)
+		{
+			cout << "What would you like the root of the tree to be?\n";
+			cin >> parent;
+			root->data = parent; //initialise the root as the functions assume that a root has been made
+			cout << "Enter the remaining data for your tree, END WITH a 0\n";
+			cin >> item;
+			while (item != '0')
+			{
+				insert_tree_node(root, item);
+				cin >> item;
+			}
+			//cout << "The root of the tree is: " << root->data << endl;
+
+			cout << "\nPrinting tree in ascending order: \n";
+			print_tree_ascending(root);
+			cout << endl;
+
+			cout << "\nPrinting tree in descending order: \n";
+			print_tree_descending(root);
+			cout << endl;
+
+			cout << "\nPrinting tree in pre-order: \n";
+			print_pre_order(root);
+			cout << endl;
+
+			cout << "\nPrinting tree in post-order: \n";
+			print_post_order(root);
+			cout << endl;
+
+			cout << "\nWhat item would you like to search for?\n";
+			cin >> searchData;
+			Tree_Node *test_search = tree_search(root, searchData);
+			cout << test_search->data << " " << test_search << endl;
+
+			tree_delete(root);
+		}
+
+	else
+	{
+		int size = 0;
+		int counter = 0;
+		char treeArray[100]; //initilise an array for the data to be held in
+		cout << "Enter the data, END WITH a 0. \n";
+		cin >> item;
+		while (item != '0')
+		{
+			size++; //the size of the array with information in it
+			treeArray[counter] = item;
+			counter++; //update index of array
+			cin >> item;
+		}
+
+		/*for (int k = 0; k < counter; k++)
+		{
+			cout << treeArray[k] << "  ";
+		}
+		cout << endl;*/
+
+		selectionSort(treeArray, size);  //sort the array in smallest to greatest order
+
+		for (int h = 0; h < counter; h++)
+		{
+			cout << treeArray[h];
+		}
+		cout << endl;
+		balance(treeArray, 0, size-1);
+	}
+
+
+	int x;
+	cin >> x;  //to keep the window open
+	return 0;
+}
+
+//Creates a new node in the correct position
+//This function assumes that the root has already been set
+void insert_tree_node(Tree_Node *root, char data)
+{
+	if (root == NULL)
+	{
+		//cout << "data = root\n";
+		cout << "tree is empty\n";
+		return;
+	}
+
+	if (data < root->data)
+	{
+		//cout << "data < root\n";
+		if (root->left != NULL) //already a node
+		{
+			insert_tree_node(root->left, data); //recurse using the left subtree as the new root
+		}
+
+		else
+		{
+			//create new node
+			root->left = new Tree_Node;
+			root->left->data = data;
+			root->left->left = root->left->right = NULL; //initilise new left and right
+			cout << data << " was inserted to the left of " << root->data << endl;
+		}
+	}
+
+	else
+	{
+		//cout << "data > root\n";
+		if (root->right != NULL) //already a node
+		{
+			insert_tree_node(root->right, data); //recurse using the right subtree as the new root
+		}
+
+		else
+		{
+			//create new node
+			root->right = new Tree_Node;
+			root->right->data = data;
+			root->right->left = root->right->right = NULL; //initilise new left and right
+			cout << data << " was inserted to the right of " << root->data << endl;
+		}
+	}
+}
+
+//if the value exists in the tree it returns the value
+//if the value isn't in the tree it returns what the parent would be if you were to add it to the tree
+//This function assumes that the root has already been set
+Tree_Node* tree_search(Tree_Node* root, char data)
+{
+	//cout << "searching root: " << root->data << endl;
+	if (root == NULL)
+	{
+		//cout << "root == NULL\n";
+		cout << "Tree is empty \n";
+	}
+
+	else if (data == root->data)
+	{
+		//cout << "data = root\n";
+		return root;
+	}
+
+	//if the data is less than the data in the root, check for a left node
+	//if there is no left node then the data is not on the tree
+	else if (data < root->data)
+	{
+		//cout << "data < root\n";
+		if (root->left == NULL)
+		{
+			cout << data << " is not in tree \n";
+			cout << "The parent of " << data << " would be ";
+			return root;
+		}
+		//if there is a left node, then recurse
+		return tree_search(root->left, data);
+	}
+
+	//if the data is greater than the data in the root, check for a right node
+	//if there is no right node then the data is not on the tree
+	else if (data > root->data)
+	{
+		//cout << "data > root\n";
+		if (root->right == NULL)
+		{
+			cout << data << " is not in tree \n";
+			cout << "The parent of " << data << " would be ";
+			return root;
+		}
+		//if there is a right node, then recurse
+		return tree_search(root->right, data);
+	}
+}
+
+//Prints the data held in every node from the smallest to greatest order
+//This is a recursive function that recurses all left subtrees then prints the data held in the current node then recurses all right subtrees
+//This function assumes that the root has already been set
+//In-order
+void print_tree_ascending(Tree_Node *root)
+{
+	if (root != NULL)
+	{
+		//cout << "root is " << root->data << endl;
+		print_tree_ascending(root->left);
+		cout << root->data << " ";
+		print_tree_ascending(root->right);
+	}
+}
+
+//Prints the data held in every node from greatest to smallest order
+//This is a recursive function that recurses all left subtrees then prints the data held in the current node then recurses all right subtrees
+//This function assumes that the root has already been set
+void print_tree_descending(Tree_Node *root)
+{
+	if (root != NULL)
+	{
+		print_tree_descending(root->right);
+		cout << root->data << " ";
+		print_tree_descending(root->left);
+	}
+}
+
+//Prints the data held in every node in pre-order
+//This is a recursive function that prints the data in the current node then recurses all subtrees from left to right
+//This function assumes that the root has already been set
+void print_pre_order(Tree_Node *root)
+{
+	if (root != NULL)
+	{
+		cout << root->data << " ";
+		print_pre_order(root->left);
+		print_pre_order(root->right);
+	}
+}
+
+//Prints the data held in every node in post-order
+//This is a recursive function that recurses all subtrees from left to right and then prints the data in the current node
+//This function assumes that the root has already been set
+void print_post_order(Tree_Node *root)
+{
+	if (root != NULL)
+	{
+		print_post_order(root->left);
+		print_post_order(root->right);
+		cout << root->data << " ";
+	}
+}
+
+//Deletes the children of each node and then deletes the node itself
+//This is a recursive function that recurses all subtrees from left to right and then deletes the data in the current node
+//This function assumes that the root has already been set
+void tree_delete(Tree_Node* root)
+{
+	if (root != NULL)
+	{
+		tree_delete(root->left);
+		tree_delete(root->right);
+		cout << endl << root->data << " was deleted";
+		delete root;
+	}
+}
+
+//Takes in the array with the sorted data and gets the root of the tree
+//Then calls the balance recurse function to add in the rest of the data to the tree
+void balance(char treeArray[], int first, int last)
+{
+	Tree_Node *root = new Tree_Node; //memory for root
+	root->left = root->right = NULL; //initilise left and right
+	int midpoint = (first + last) / 2; //find the midpoint of the array, this will be the root
+	char parent = treeArray[midpoint];
+	root->data = parent;
+	//cout << "midpoint is " << midpoint << " " << root->data << endl;
+
+	balanceRecurse(root, treeArray, first, midpoint - 1); //recurse through the array to the left of the root
+	balanceRecurse(root, treeArray, midpoint + 1, last); //recurse through the array to the right of the root
+
+	//print the tree when all of the data has been added
+	cout << "\nPrinting tree in ascending order: \n";
+	print_tree_ascending(root);
+	cout << endl;
+
+	/*cout << "\nPrinting tree in descending order: \n";
+	print_tree_descending(root);
+	cout << endl;
+	cout << "\nPrinting tree in pre-order: \n";
+	print_pre_order(root);
+	cout << endl;
+	cout << "\nPrinting tree in post-order: \n";
+	print_post_order(root);
+	cout << endl;*/
+
+	char searchData;
+	cout << "\nWhat item would you like to search for?\n";
+	cin >> searchData;
+	Tree_Node *test_search = tree_search(root, searchData);
+	cout << test_search->data << " " << test_search << endl;
+
+	tree_delete(root);
+}
+
+//This function assumes that the root has already been set
+//Once the root has been set, this function picks the order in which the rest of the data should be added to the tree to make it balanced
+void balanceRecurse(Tree_Node *root, char treeArray[], int first, int last)
+{
+	if (first <= last)
+	{
+		int midpoint = (first + last) / 2; //find the new midpoint
+		char parent = treeArray[midpoint]; 
+		//cout << "midpoint is " << midpoint << " " << parent << endl;
+		insert_tree_node(root, parent);  //add to the tree
+		//cout << endl << root->data << endl;
+
+		balanceRecurse(root, treeArray, first, midpoint - 1); //recurse to the left of the new midpoint
+		balanceRecurse(root, treeArray, midpoint + 1, last);  //recurse to the right of the new midpoint
+	}
+}
+
+//Goes through the array and finds the smallest char in the array, once it reaches the end, it swaps the smallest item with the current item
+void selectionSort(char treeArray[], int size)
+{
+	for (int i = 0; i < size; i++) //loop from left to right
+	{
+		int smallestIndex = i;
+		for (int j = i + 1; j < size; j++) //loop over rest of array
+		{
+			if (treeArray[j] < treeArray[smallestIndex]) //looking for smallest value
+			{
+				smallestIndex = j;
+			}
+		}
+		swap(treeArray[i], treeArray[smallestIndex]); //swap current and smallest value
+	}
+	cout << "Array sorted using selection sort\n";
+}
