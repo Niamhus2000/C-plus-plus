@@ -1,0 +1,52 @@
+//programme to take in employee's information and then print out the name, deduction and pay
+#include <iostream>
+#include <string>
+#include <iomanip>
+using namespace std;
+
+int main()
+{
+	string name;
+	int hours;
+	double rate, deductions, netPay, grossWage, tax, PRSI, unionDues, overtime, overtimeHours, taxcredit;
+	//tax is 20% of the gross wags, PRSI is 2.5% of te gross wage, union dues are 3.50
+	//overtime: hours beyond 35 are paid 1.5 times the hourly rate
+
+	cin.ignore(INT_MAX, '\n');
+	cout << "Enter the hours worked in a week, the hourly rate of pay, any taxcredits and the name: ";
+	cin >> hours >> rate >> taxcredit;
+	getline(cin, name);
+	
+	if (hours > 35)
+	{
+		overtimeHours = hours%35;
+		overtime = overtimeHours*(rate*1.5);
+	}
+
+	else
+	{
+		overtime = 0;
+	}
+
+	grossWage = hours*rate;
+	tax = grossWage * 0.2;
+	if (taxcredit > tax)
+	{
+		tax = 0;
+	}
+	else
+	{
+		tax = tax - taxcredit;
+	}
+	PRSI = grossWage * 0.025;
+	unionDues = 3.5;
+
+
+	cout << "Name\t" << name << "\nHours\t\t" << hours << "\nHourly rate\t" << rate << "\nGross Wage\t" << grossWage;
+	cout <<  "\nTax @20%\t" << tax << "\nPRSI @2.5%\t" << setprecision(3) << PRSI << "\nUnion dues\t" << unionDues;
+	
+	int x;
+	cin >> x;
+
+	return 0;
+}
