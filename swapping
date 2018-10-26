@@ -1,0 +1,27 @@
+//programme to swap two values
+#include <iostream>
+using namespace std;
+
+void swap(int &x, int &y);
+
+int main()
+{
+	int a, b;
+	cout << "Enter two numbers: ";
+	cin >> a >> b;
+	swap(a, b);
+	cout << a << " " <<  b;
+
+	int x; 
+	cin >> x;
+
+	return 0;
+}
+
+void swap(int &x, int &y)
+{
+	int temp;
+	temp = x;
+	x = y;
+	y = temp;
+}
