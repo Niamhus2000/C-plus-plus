@@ -1,0 +1,227 @@
+//program to help the user edit a shopping list
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+int choice;
+string item;
+int quantity;
+int totalQuantity = 0;
+double price;
+double totalPrice;
+void sort();
+
+
+int counter = 0;
+double itemTotal;
+string removeItem;
+
+struct shoppingList 
+{
+	int data;
+	string item;
+	int quantity;
+	double price;
+	shoppingList* next;
+};
+void swap(shoppingList *one, shoppingList *two);
+shoppingList *head = NULL;
+shoppingList *tail = NULL;
+
+
+void addToTail()
+{
+	string item;
+	cout << "Enter item: ";
+	cin >> item;
+
+	int quantity;
+	cout << "Enter quantity: ";
+	cin >> quantity;
+	shoppingList *newNode = new shoppingList;
+	newNode->item = item;
+	newNode->next = NULL;
+	newNode->quantity = quantity;
+	totalQuantity = totalQuantity + quantity;
+	newNode->next = NULL;
+
+	double price;
+	cout << "Enter unit price: ";
+	cin >> price;
+	newNode->price = price;
+	//totalPrice = totalPrice + (price*quantity);
+	newNode->next = NULL;
+
+	// add it to the tail of the list
+	if (tail == NULL)
+	{
+		// list was empty
+		head = tail = newNode;
+	}
+	else 
+	{
+		tail->next = newNode; // now the next of old tail is the new node
+		tail = newNode;       // the new node should become the new tail
+	}
+	counter++;
+}
+
+
+void print() 
+{
+	int i = 1;
+	double totalPrice = 0;
+
+	shoppingList *curr = head;
+
+
+	// iterate until end of the list
+	while (curr != NULL)
+	{
+		cout << i << ")";
+		cout << curr->item << ", " << curr->price << " EUROS X " << curr->quantity; // print current value
+		itemTotal = curr->price*curr->quantity;
+		cout << "  TOTAL IS " << itemTotal << " EUROS\n";
+		totalPrice = totalPrice + itemTotal;
+		curr = curr->next;                       // move to next
+		i++;
+	}
+	cout << endl;
+	cout << "Your list contains " << counter << " items for a total of " << totalPrice << " EUROS\n";
+
+}
+
+
+// Clear the list by deleting all items
+
+void destroy() 
+{
+	shoppingList *next, *curr = head;
+	// iterate until end of the list
+	while (curr != NULL) 
+	{
+		next = curr->next; // remember the next
+		delete curr;       // delete current
+		curr = next;       // move to next
+	}
+}
+
+
+ // Find and remove the first occurrence of data
+ //Return true iif the data was found and removed
+bool remove(string removeItem)
+{
+	shoppingList *curr = head;
+	shoppingList *prev = NULL;
+
+	// iterate until end of the list
+	while (curr != NULL) 
+	{
+		// compare the current data with the one to delete
+		if (curr->item == removeItem)// found match!
+		{ 
+			// Is it the first element?
+			if (curr == head) 
+			{ // special case: head
+				head = curr->next; // update head to the next
+			}
+			else 
+			{ // any other case: perform bypass
+				prev->next = curr->next; //bypass
+				if (curr == tail)
+				{// special case: tail
+					tail = prev; // next should be the new tail
+				}
+			}
+			delete curr; // delete the node
+			return true; // job done!
+		}
+		// move to the next one
+		prev = curr; // remember the previous
+		curr = curr->next;
+	}
+
+	return false;
+}
+
+int main() 
+{
+	cout << "Make a choice: (1) Add item, (2) Remove item, (3) Exit\n";
+	cin >> choice;
+	while (choice > 0 || choice < 4)
+	{
+		if (choice == 3)
+		{
+			cout << "BYE";
+			exit(0);
+		}
+
+		if (choice == 1)
+		{
+			addToTail();
+			sort();
+			print();
+		}
+
+		if (choice == 2)
+		{
+			cout << "Which item would you like to delete?\n";
+			cin >> removeItem;
+			remove(removeItem);
+			counter--;
+			totalPrice = totalPrice - (quantity*price);
+			print();
+
+		}
+
+		cout << "Make a choice: (1) Add item, (2) Remove item, (3) Exit\n";
+		cin >> choice;
+
+	}
+
+}
+
+void swap(shoppingList *one, shoppingList *two)
+{
+	shoppingList holder;
+	holder = *one;
+
+	one->item = two->item;
+	one->quantity = two->quantity;
+	one->price = two->price;
+
+	two->item = holder.item;
+	two->quantity = holder.quantity;
+	one->price = holder.price;
+
+}
+
+void sort()
+{
+	bool swapped = true;
+	shoppingList *current;
+	shoppingList *next;
+	int j = 0;
+	while (swapped)
+	{
+		current = head;
+		swapped = false;
+		j++;
+
+		for (int i = 0; i<counter - j; i++)
+		{
+			next = current->next;
+			string one = current->item;
+			string two = next->item;
+
+			if (one>two)
+			{
+				swap(current, next);
+				swapped = true;
+			}
+			current = current->next;
+		}
+	}
+}
