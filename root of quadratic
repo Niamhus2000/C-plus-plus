@@ -1,0 +1,24 @@
+//programme to compute the roots of a quadratic, assuming that there are two roots
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+int main()
+{
+	double a, b, c, discriminant, root1, root2;
+	cout << "Enter a, b, c: ";
+	cin >> a >> b >> c;
+	discriminant = b*b - (4 * a*c);
+	//assume that this is > 0
+
+	root1 = (-b + sqrt(discriminant)) / 2 * a;
+	root2 = (-b - sqrt(discriminant)) / 2 * a;
+
+	cout << "root 1 is: " << root1 << endl;
+	cout << "root 2 is: " << root2 << endl;
+
+	int x;
+	cin >> x;
+
+	return 0;
+}
