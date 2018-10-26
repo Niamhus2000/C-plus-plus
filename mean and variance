@@ -1,0 +1,101 @@
+//programme to compute the mean, variance and standard deviation for a sequence of numbers
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+double mean(double numbers[], int size);
+double variance(double numbers[], int size);
+double standardDeviation(double numbers[], int size);
+int zeroCrossing(double numbers[], int size);
+void readToSentinel(double numbers[], int &size, int capacity, int sentinel);
+
+
+int main()
+{
+	double m, var, stdDev;
+	int zero, size;
+	const int capacity = 100;
+	double numbers[capacity];
+	readToSentinel(numbers, size, capacity, 9999);
+
+	m = mean(numbers, size);
+	var = variance(numbers, size);
+	stdDev = standardDeviation(numbers, size);
+	zero = zeroCrossing(numbers, size);
+
+	cout << "The mean is: " << m << endl;
+	cout << "The variance is: " << var << endl;
+	cout << "The standard Deviation is: " << stdDev << endl;
+	cout << "The number of zero corossings is: " << zero << endl;
+
+	int x;
+	cin >> x;
+
+	return 0;
+}
+
+void readToSentinel(double numbers[], int &size, int capacity, int sentinel)
+{
+	cout << "Enter your values, to end enter 9999\n";
+	int value;
+	size = 0;
+	cin >> value;
+	while (size < capacity && value != sentinel)
+	{
+		numbers[size] = value;
+		size++;
+		cin >> value;
+	}
+}
+
+double mean(double numbers[], int size)
+{
+	double sum, m;
+	int counter;
+	sum = counter = 0;
+	for (int i = 0; i < size; i++)
+	{
+		sum = sum + numbers[i];
+		counter++;
+	}
+	m = sum / counter;
+	return m;
+}
+
+double variance(double numbers[], int size)
+{
+	int counter;
+	double m, sum, difference, var;
+	sum = counter = 0;
+	m = mean(numbers, size);
+	for (int i = 0; i < size; i++)
+	{
+		difference = m - numbers[i];
+		sum = pow(difference, 2);
+		counter++;
+	}
+	var = sum / (counter - 1);
+	return var;
+}
+
+double standardDeviation(double numbers[], int size)
+{
+	double var = variance(numbers, size);
+	double stdDev = sqrt(var);
+	return stdDev;
+}
+
+int zeroCrossing(double numbers[], int size)
+{
+	int count = 0;
+	for (int i = 0; i < size; i++)
+	{
+		int x = numbers[0];
+		int y = numbers[i + 1];
+		if ((x*y) < 0)
+		{
+			count++;
+		}
+	}
+	return count;
+}
