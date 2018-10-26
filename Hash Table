@@ -1,0 +1,142 @@
+//Program to store names using a hash table
+#include <string>
+#include <iostream>
+#include <stdlib.h>
+using namespace std;
+
+//define all constant varialble
+#define SIZE 17
+#define TEST_KEYS 7
+
+//declare all the functions
+int hash_function(string key);
+void insert_linear_probing(string key);
+void insert_double_hashing(string key);
+void print_table();
+bool search(string key);
+
+struct entry
+{
+	string key;
+};
+
+ entry *hash_array[SIZE];
+
+int main()
+{
+	string name;
+	string test_strings[TEST_KEYS] = { "prince adam", "orko", "cringer", "teela", "aleet", "princess adora", "orko" };
+	for (int a = 0; a < TEST_KEYS; a++)
+	{
+		bool test;
+		test = search(test_strings[a]);
+		if (test == true)
+		{
+			cout << test_strings[a] <<" is already in the hash table\n";
+		}
+		else
+		{
+			insert_linear_probing(test_strings[a]);
+			//insert_double_hashing(test_strings[a]);
+		}
+	}
+	
+	print_table();
+
+	int x;
+	cin >> x;  //used to keep terminal open so it can be read
+	return 0;
+}
+
+int hash_function(string key)
+{
+	//cout << "ENTERING HASH FUNCTION\n";
+	int sum = 0;
+	for (int i = 0; i < key.length(); i++)
+	{
+		sum = sum + key[i];   //adds numbers of string
+	}
+
+	//cout << "The sum of " << key << " is: " << sum << endl;
+
+	//division method
+	int hash_index;
+	hash_index = sum % SIZE;
+	//cout << "The hash value of " << key << " is: " << hash_index << endl;
+	//cout << "LEAVING HASH FUNCTION\n" << endl << endl;
+	return hash_index;
+}
+
+void insert_linear_probing(string key)
+{
+	//cout << "ENTERING LINEAR PROBING \n";
+	struct entry *entry_p = new entry;
+	entry_p->key = key;
+
+	//get the index value
+	int hash_index;
+	hash_index = hash_function(key);
+
+	//move through the array until you find an empty cell
+	while (hash_array[hash_index] != NULL)
+	{
+		hash_index++; //move to the next cell   (try the next one down)
+		hash_index %= SIZE; //wraps around the table
+	}
+
+	hash_array[hash_index] = entry_p;
+}
+
+void insert_double_hashing(string key)
+{
+	struct entry *entry_p = new entry;
+	entry_p->key = key;
+
+	int probe, offset;
+	probe = hash_function(key);
+	offset = probe *(SIZE - 1) % SIZE;
+
+
+	//move through the array until you find an empty cell
+	while (hash_array[probe] != NULL)
+	{
+		probe = probe + offset;
+		probe %= SIZE; //wraps around the table
+	}
+
+	hash_array[probe] = entry_p;
+}
+
+//function to print out the hash table
+void print_table()
+{
+	cout << "Index\t" << "Name\n";
+	for (int a = 0; a < SIZE; a++)
+	{
+		cout << a << "\t";
+		if (hash_array[a] != NULL)
+		{
+			cout << hash_array[a]->key << endl;
+		}
+		else
+			cout << "~~~\n";
+	}
+	cout << endl;
+}
+
+//function to search in the hah table, returns true if the name is already in the hash table
+bool search(string key)
+{
+	int hash_index = hash_function(key);  //get the hash
+
+	//move in array until an empty 
+	while (hash_array[hash_index] != NULL)
+	{
+		if (hash_array[hash_index]->key == key)  //if a match
+			return true;
+
+		hash_index++;  //go to next cell
+		hash_index %= SIZE;  //wrap around the table
+	}
+	return false;
+}
