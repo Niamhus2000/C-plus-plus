@@ -1,0 +1,179 @@
+//program to sort an array of numbers using different sorting algorithms and compare them 
+
+#include <time.h>  //for timer
+#include<iostream>
+#include<iomanip>
+using namespace std;
+
+#define SIZE 20  //only have to define the size in one place
+int counter = 0; //global variable, counts the number of probes in quicksort
+
+int numbers[SIZE];
+int bubble[SIZE] = { NULL }; // initialise array
+int selection[SIZE] = { NULL }; //initialise array
+int insertion[SIZE] = { NULL }; //initialise array
+int quick[SIZE] = { NULL };  //initialise array
+
+//declare functions
+void print(int array1[], int array2[], int array3[],int array4[], int array5[]);
+void bubbleSort(int array[]);
+void selectionSort(int array[]);
+void insertionSort(int array[]);
+void quicksort(int array[], int first, int last);
+int partition(int array[], int first, int last);
+
+int main()
+{
+	srand(time(NULL)); //to get new set of random variables each time
+	for (int i = 0; i < SIZE; i++)
+	{
+		numbers[i] = rand() % 100; //randomises the array
+	}
+
+	for (int j = 0; j < SIZE; j++)
+	{
+		//set new arrays equal to the unsorted array
+		bubble[j] = numbers[j];
+		selection[j] = numbers[j];
+		insertion[j] = numbers[j];
+		quick[j] = numbers[j];
+	}
+
+	clock_t tStart1 = clock(); //starts timer
+    bubbleSort(bubble);
+	clock_t tEnd1 = clock(); //ends timer
+	cout << "Time for bubble sort: " << (double)(tEnd1 - tStart1) / CLOCKS_PER_SEC << "\n\n";
+
+	clock_t tStart2 = clock();
+	selectionSort(selection);
+	clock_t tEnd2 = clock();
+	cout << "Time for selection sort: " << (double)(tEnd2 - tStart2) / CLOCKS_PER_SEC << "\n\n";
+
+	clock_t tStart3 = clock();
+	insertionSort(insertion);
+	clock_t tEnd3 = clock();
+	cout << "Time for insertion sort: " << (double)(tEnd3 - tStart3) / CLOCKS_PER_SEC << "\n\n";
+
+	clock_t tStart4 = clock();
+	quicksort(quick, 0, SIZE-1);
+	clock_t tEnd4 = clock();
+	cout << "Number of probes for quicksort is: " << counter << "\n";
+	cout << "Time for quicksort: " << (double)(tEnd4 - tStart4) / CLOCKS_PER_SEC << "\n\n";
+	
+	print(numbers, bubble, selection, insertion, quick);
+	
+	int x;
+	cin >> x; //to keep window open so it is readable
+	return 0;
+}
+
+//print in table format
+void print (int array1[], int array2[], int array3[], int array4[], int array5[])
+{
+	//prints results in a table
+	cout << "Before" << "\t" << "Bubble" << "\t" << "Selection  " << "Insertion  "<< "Quicksort\n";
+	for (int i = 0; i < SIZE; i++)
+	{
+		cout << array1[i] << "\t" << " " << array2[i] << "\t" << "  " << array3[i] << "\t" << "     " << array4[i] << "\t\t" << array5[i] << "\n";
+	}
+	cout << endl;
+}
+void bubbleSort(int array[])
+{   
+	int probe1 = 0;
+	int probe2 = 0;
+	int j = 0;
+	bool sorted = false;
+	//loop through the data repeatedly until the array is sorted
+	while (sorted == false)
+	{
+		sorted = true; //if the array is already sorted it won't need to go through it again
+		j++;
+		// numbers from position SIZE-j to SIZE-1 have already been moved to the right place
+		// bubble sort between 0 and SIZE-j
+		for (int i = 0; i < SIZE - j; i++)
+		{
+			if (array[i + 1] < array[i]) //if next < current
+			{
+				swap(array[i], array[i + 1]); //swap next and current
+				sorted = false;
+				probe1++; //every pair swap
+			}
+			probe2++;  //every pair investigated
+		}
+	}
+	cout << "Number of probes for bubble sort is: " << probe1 + probe2 << endl;
+}
+
+void selectionSort(int array[])
+{  
+	int probe1 = 0;
+	int probe2 = 0;
+	for (int i = 0; i < SIZE; i++) //loop over array
+	{
+		// set the first number as the smallest number
+		int smallestIndex = i;
+		for (int j = i + 1; j < SIZE; j++) //loop over rest of array
+		{
+			if (array[j] < array[smallestIndex]) //looking for smallest value
+			{
+				smallestIndex = j;  //j is the new smallest number
+			}
+			probe1++; //every pair investigated
+		} 
+		swap(array[i], array[smallestIndex]); //swap current and smallest value
+		probe2++; //every swap
+	}
+	cout << "Number of probes for selection sort is: " << probe1 + probe2 << endl;
+}
+
+void insertionSort(int array[])
+{
+	int probe1 = 0;
+	int probe2 = 0;
+	for (int i = 0; i < SIZE - 1; i++) //loop over array from left to right
+	{
+		for (int j = i + 1; j > 0; j--) //loop back over the array from right to left
+		{
+			if (array[j - 1] > array[j]) //if new element is smaller than current element swap them
+			{
+				swap(array[j], array[j - 1]);
+				probe1++; //every swap
+			}
+			probe2++; //every pair investigated
+		}
+	}
+	cout << "Number of probes for insertion sort is: " << probe1 + probe2 << endl;
+}
+
+//used for quicksort
+int partition(int array[], int p, int r)
+{
+	int x, i;
+	x = array[r]; //pivot
+	i = p - 1;
+	for (int j = p; j < r; j++)
+	{
+		if (array[j] <= x)  //if what's at j is less than the pivot
+		{
+			i++; //increase i
+			swap(array[i], array[j]); //swap the new i and the same j
+			counter++;
+		}
+	}
+	swap(array[i + 1], array[r]); //swap i+i and what's at r
+	counter++;
+	return i + 1;
+}
+
+void quicksort(int array[], int p, int r)
+{
+	int q;
+	if (p < r)
+	{
+		q = partition(array, p, r); 
+		//everything to the left of q should be smaller or equal, everything to the right of q should be bigger
+		quicksort(array, p, q - 1); //use quicksort on what's to the left of q
+		quicksort(array, q + 1, r); //use quicksort on what's to the right of q
+	}
+}
